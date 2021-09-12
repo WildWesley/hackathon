@@ -1,0 +1,97 @@
+from song_lyrics import lyrics
+import random
+
+row1 = ["-", "-", "-"]
+row2 = ["-", "-", "-"]
+row3 = ["-", "-", "-"]
+game_over = False
+turn = "O"
+
+# I'm gonna be picking a random song for each tic-tac-toe game:
+def pick_song(lyrics):
+    selected_num = random.randint(0, len(lyrics))
+    i = 0
+    for k, v in lyrics.items():
+        if selected_num == i:
+            song_name = k
+            song_unsplit = v
+        else:
+            i += 1
+    song_split = "".split(song_unsplit)
+    return song_split, song_name
+
+# Find out if game over:
+def game_test(row1, row2, row3):
+    if row1[0] == row1[1] == row1[2] and row1[0] != "-":
+        return True
+    elif row2[0] == row2[1] == row2[2] and row2[0] != "-":
+        return True
+    elif row3[0] == row3[1] == row3[2] and row3[0] != "-":
+        return True
+    elif row1[0] == row2[0] == row3[0] and row1[0] != "-":
+        return True
+    elif row1[1] == row2[1] == row3[1] and row1[1] != "-":
+        return True
+    elif row1[2] == row2[2] == row3[2] and row1[2] != "-":
+        return True
+    elif row1[0] == row2[1] == row3[2] and row1[0] != "-":
+        return True
+    elif row1[2] == row2[1] == row3[0] and row1[2] != "-":
+        return True
+    else:
+        return False
+
+# Printing the graphic interface:
+def interface(row1, row2, row3, given_lyrics):
+    print("The game's still on...")
+    print(f"Lyrics so far:\n{given_lyrics}\n")
+    print(f"{row1[0]} | {row1[1]} | {row1[2]}")
+    print("---------")
+    print(f"{row2[0]} | {row2[1]} | {row2[2]}")
+    print("---------")
+    print(f"{row3[0]} | {row3[1]} | {row3[2]}")
+
+# Get the song
+song_split, song_name = pick_song(lyrics)
+given_lyrics = ""
+word_number = 0
+
+while game_over == False:
+    given_lyrics += song_split[word_number]
+    word_number += 1
+    if turn == "O":
+        interface(row1, row2, row3, given_lyrics)
+        move = int(input("It's O's turn...make a move\n"))
+        if 0 < move < 4:
+            row1[move - 1] = "O"
+            turn = "X"
+        elif 3 < move < 7:
+            row2[move - 4] = "O"
+            turn = "X"
+        elif 6 < move < 10:
+            row3[move - 7] = "O"
+            turn = "X"
+        else:
+            print("Input invalid: type a number 1-9")
+    elif turn == "X":
+        interface(row1, row2, row3)
+        move = int(input("It's X's turn...make a move\n"))
+        if 0 < move < 4:
+            row1[move - 1] = "X"
+            turn = "O"
+        elif 3 < move < 7:
+            row2[move - 4] = "X"
+            turn = "O"
+        elif 6 < move < 10:
+            row3[move - 7] = "X"
+            turn = "O"
+        else:
+            print("Input invalid: type a number 1-9")
+    game_over = game_test(row1, row2, row3)
+
+if turn == "O":
+    winner = "X"
+if turn == "X":
+    winner = "O"
+print(f"Game over: {winner} wins!")
+
